@@ -1,0 +1,31 @@
+desc:Coney Island. Mix Bus Separator
+
+slider1:weight=1<1,1.5,0.01>Ice Cream
+slider2:flavour=0<1,0,1{Background,Foreground}>Flavour
+
+@slider
+pos = sqrt(weight);
+neg = 1/weight;
+
+/*
+Kanske smidigare med en "spl0 == > 0 =..."
+Och det kommer att behövas för slidern sen åxå
+Process the signal prior to splitting it...
+*/
+
+@sample
+//Producing the two different filterings
+s00 = (n00+=((spl0-n00)*neg));
+s01 = (n01+=((spl0-n01)*pos));
+
+//Choice of flavour for processing
+//Half Wave Rectifier picking either filtered signal
+flavour == 0 ? spl0 = spl0 < 0 ? s01 : s00;
+flavour == 1 ? spl0 = spl0 > 0 ? s01 : s00;
+
+//Repeat left channel code here
+s10 = (n10+=((spl1-n10)*neg));
+s11 = (n11+=((spl1-n11)*pos));
+
+flavour == 0 ? spl1 = spl1 < 0 ? s11 : s10;
+flavour == 1 ? spl1 = spl1 > 0 ? s11 : s10;
